@@ -38,30 +38,44 @@ export const createClients = async (req, res) => {
 
 // Obtener todos los clientes con paginación
 export const getClients = async (req, res) => {
-    const { page = 1, limit = 10 } = req.query; // Valores predeterminados
-
-    const skip = (page - 1) * limit;
-
-    try {
-        const db = getDB();
-        const clients = await db.collection('clients')
-            .find()
-            .skip(parseInt(skip)) // Saltar los primeros 'skip' documentos
-            .limit(parseInt(limit)) // Limitar la cantidad de documentos devueltos
-            .toArray();
-
-        const totalClients = await db.collection('clients').countDocuments(); // Contar total de clientes
-
-        res.status(200).json({
-            totalClients,
-            totalPages: Math.ceil(totalClients / limit),
-            currentPage: page,
-            clients,
-        });
-    } catch (err) {
-        res.status(500).json({ error: 'Error al obtener los clientes' });
+    const { page = 1, limit = 10 } = req.query;
+  
+    // Validación de parámetros
+    const pageInt = parseInt(page, 10);
+    const limitInt = parseInt(limit, 10);
+    if (isNaN(pageInt) || pageInt <= 0) {
+      return res.status(400).json({ error: 'Invalid page number' });
     }
-};
+    if (isNaN(limitInt) || limitInt <= 0) {
+      return res.status(400).json({ error: 'Invalid limit' });
+    }
+  
+    // Cálculo de skip y limit
+    const skip = (pageInt - 1) * limitInt;
+  
+    try {
+      const db = getDB();
+      const clients = await db.collection('clients')
+        .find()
+        .skip(skip)
+        .limit(limitInt)
+        .toArray();
+  
+      const totalClients = await db.collection('clients').countDocuments();
+  
+      res.status(200).json({
+        totalClients,
+        totalPages: Math.ceil(totalClients / limitInt),
+        currentPage: pageInt,
+        clients,
+      });
+    } catch (err) {
+      console.error('Error fetching clients:', err);
+      res.status(500).json({ error: 'Error fetching clients' });
+    }
+  };
+
+
 
 // Obtener un cliente por ID
 export const getClientById = async (req, res) => {
