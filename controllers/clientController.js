@@ -1,6 +1,7 @@
 // controllers/clientController.js
 import { getDB } from '../db/connection.js';
 import { ObjectId } from 'mongodb';
+import { createPager } from '../utils/paginator.js';
 
 // Crear un nuevo cliente
 export const createClient = async (req, res) => {
@@ -38,42 +39,47 @@ export const createClients = async (req, res) => {
 
 // Obtener todos los clientes con paginación
 export const getClients = async (req, res) => {
-    const { page = 1, limit = 10 } = req.query;
-  
+    console.log("Query:", req.query);
+
+    const { page = 1, limit = 10, filter = {}, sort = {} } = req.query;
+
     // Validación de parámetros
     const pageInt = parseInt(page, 10);
     const limitInt = parseInt(limit, 10);
+
     if (isNaN(pageInt) || pageInt <= 0) {
-      return res.status(400).json({ error: 'Invalid page number' });
+        return res.status(400).json({ error: 'Invalid page number' });
     }
     if (isNaN(limitInt) || limitInt <= 0) {
-      return res.status(400).json({ error: 'Invalid limit' });
+        return res.status(400).json({ error: 'Invalid limit' });
     }
-  
+
     // Cálculo de skip y limit
     const skip = (pageInt - 1) * limitInt;
-  
+
     try {
-      const db = getDB();
-      const clients = await db.collection('clients')
-        .find()
-        .skip(skip)
-        .limit(limitInt)
-        .toArray();
-  
-      const totalClients = await db.collection('clients').countDocuments();
-  
-      res.status(200).json({
-        totalClients,
-        totalPages: Math.ceil(totalClients / limitInt),
-        currentPage: pageInt,
-        clients,
-      });
+        const db = getDB();
+
+        // Aplicar filtro y sort (puedes ajustar el filtro según las necesidades)
+        const count = await db.collection('clients').countDocuments(filter);
+        const clients = await db.collection('clients')
+            .find(filter)
+            .skip(skip)
+            .limit(limitInt)
+            .sort(sort)
+            .toArray();
+
+        // Utiliza createPager para generar la respuesta paginada
+        const pager = createPager(pageInt, clients, count, limitInt);
+
+        // Enviar la respuesta con la paginación
+        return res.status(200).json(pager);
     } catch (err) {
-      console.error('Error fetching clients:', err);
-      res.status(500).json({ error: 'Error fetching clients' });
+        console.error('Error fetching clients:', err);
+        return res.status(500).json({ error: 'Error fetching clients' });
     }
-  };
+};
+
 
 
 
