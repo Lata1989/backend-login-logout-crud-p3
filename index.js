@@ -10,7 +10,21 @@ dotenv.config();
 const app = express();
 const PORT = 4000;
 
-app.use(cors('*'));
+// Configurar CORS para permitir la URL del frontend
+const allowedOrigins = ['https://login-logout-crud-react-p3-frontend.vercel.app'];
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (allowedOrigins.includes(origin) || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('No permitido por CORS'));
+    }
+  },
+  credentials: true, // Si necesitas enviar cookies u otros headers
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Conectar a la base de datos
