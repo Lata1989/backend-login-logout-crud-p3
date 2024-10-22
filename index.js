@@ -11,9 +11,8 @@ const app = express();
 const PORT = 4000;
 
 const corsOptions = {
-  origin: '*',  // Permitir todas las solicitudes de cualquier origen
+  origin: '*',
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  credentials: true,
   allowedHeaders: ['Content-Type', 'Authorization']
 };
 
