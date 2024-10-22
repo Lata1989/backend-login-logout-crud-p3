@@ -10,18 +10,7 @@ dotenv.config();
 const app = express();
 const PORT = 4000;
 
-// Configurar CORS para permitir la URL del frontend
-var corsOptions = {
-  origin: function (origin, callback) {
-    if (whitelist.indexOf(origin) !== -1 || !origin) {
-      callback(null, true)
-    } else {
-      callback(new Error('Not allowed by CORS'))
-    }
-  }
-}
-
-app.use(cors(corsOptions)); // Activar CORS con las opciones definidas
+app.use(cors()); // Activar CORS con las todas las opciones habilitadas
 app.use(express.json());
 
 // Conectar a la base de datos
