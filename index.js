@@ -12,9 +12,7 @@ const PORT = 4000;
 
 const corsOptions = {
   origin: 'https://login-logout-crud-react-p3-frontend.vercel.app',
-  credentials: true,
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  allowedHeaders: ['Content-Type', 'Authorization']
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE'
 };
 
 app.use(cors(corsOptions));
