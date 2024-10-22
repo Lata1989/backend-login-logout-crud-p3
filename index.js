@@ -10,7 +10,13 @@ dotenv.config();
 const app = express();
 const PORT = 4000;
 
-app.use(cors()); // Activar CORS con las todas las opciones habilitadas
+const corsOptions = {
+  origin: '*',  // Permitir todas las solicitudes de cualquier origen
+  credentials: true,  // Si necesitas manejar cookies o cabeceras con credenciales
+};
+
+app.use(cors(corsOptions));
+
 app.use(express.json());
 
 // Conectar a la base de datos
