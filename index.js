@@ -11,20 +11,12 @@ const app = express();
 const PORT = 4000;
 
 // Configurar CORS para permitir la URL del frontend
-const allowedOrigins = ['https://login-logout-crud-react-p3-frontend.vercel.app'];
-
 const corsOptions = {
-  origin: (origin, callback) => {
-    if (allowedOrigins.some(allowedOrigin => origin && origin.startsWith(allowedOrigin)) || !origin) {
-      callback(null, true);
-    } else {
-      callback(new Error('No permitido por CORS'));
-    }
-  },
-  credentials: true,
+  origin: 'https://login-logout-crud-react-p3-frontend.vercel.app',
+  // credentials: true, // Permitir el envío de cookies si es necesario
 };
 
-app.use(cors(corsOptions));
+app.use(cors(corsOptions)); // Activar CORS con las opciones definidas
 app.use(express.json());
 
 // Conectar a la base de datos
