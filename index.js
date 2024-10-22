@@ -15,13 +15,13 @@ const allowedOrigins = ['https://login-logout-crud-react-p3-frontend.vercel.app'
 
 const corsOptions = {
   origin: (origin, callback) => {
-    if (allowedOrigins.includes(origin) || !origin) {
+    if (allowedOrigins.some(allowedOrigin => origin && origin.startsWith(allowedOrigin)) || !origin) {
       callback(null, true);
     } else {
       callback(new Error('No permitido por CORS'));
     }
   },
-  credentials: true, // Si necesitas enviar cookies u otros headers
+  credentials: true,
 };
 
 app.use(cors(corsOptions));
