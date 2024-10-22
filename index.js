@@ -12,10 +12,13 @@ const PORT = 4000;
 
 const corsOptions = {
   origin: '*',  // Permitir todas las solicitudes de cualquier origen
-  credentials: true,  // Si necesitas manejar cookies o cabeceras con credenciales
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true,
+  allowedHeaders: ['Content-Type', 'Authorization']
 };
 
 app.use(cors(corsOptions));
+
 
 app.use(express.json());
 
