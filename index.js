@@ -8,14 +8,15 @@ import clientRoutes from './routes/clientRoutes.js';
 dotenv.config();
 
 const app = express();
-const PORT = 4000;
+// const PORT = 4000;
 
-const corsOptions = {
-  origin: 'https://login-logout-crud-react-p3-frontend.vercel.app',
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE'
-};
+// const corsOptions = {
+//   origin: 'https://login-logout-crud-react-p3-frontend.vercel.app',
+//   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE'
+// };
 
-app.use(cors(corsOptions));
+app.use(cors());
+// app.use(cors(corsOptions));
 
 app.use(express.json());
 
